@@ -1,36 +1,6 @@
 var admZip = require('adm-zip');
 var fs = require('fs');
 
-var getMods = function(dir){
-	var mods = {}
-	var modsFile = null;
-	if(fs.existsSync(dir+"/mods.json")){
-		modsFile = JSON.parse(fs.readFileSync(dir+"/mods.json"));
-	}else{
-		modsFile = {}
-	}
-	var files = fs.readdirSync(dir);
-	files.forEach(function(file){
-		if(fs.lstatSync(dir+"/"+file).isFile()){
-			if((getExtension(file) == 'zip') || (getExtension(file) == 'jar')){
-				console.log('found mod '+file);
-				var mod = {}
-				mod.file = dir+'/'+file
-				getModZip(mod);
-				getModInfo(mod);
-				if(mod.notForge){
-					mods[mod.file] = mod;
-				}else{
-					getModVersion(mod);
-					getModDependencies(mod);
-					mods[getModId(mod).id] = mod
-				}
-			}
-		}
-	})
-	return mods;
-}
-
 var checkModDeps = function(mod,modList){
 	if(mod.notForge){
 		console.log('Mod is not a forge mod.  Cannot check dependencies');
