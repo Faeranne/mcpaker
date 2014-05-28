@@ -1,5 +1,6 @@
 var fs = require('fs');
 var opts = require('nomnom')
+var manager = require('./manager');
 opts.command('newpak')
 	.option('modpak',{
 		abbr: 'm',
@@ -17,12 +18,12 @@ opts.command('newpak')
 
 opts.command('addmod')
 	.option('name',{
-		position: 0,
+		position: 1,
 		required: true,
 		help: 'name of the mod'
 	})
 	.option('zip',{
-		position: 1,
+		position: 2,
 		required: true,
 		help: 'zip file of the mod'
 	})
@@ -35,8 +36,6 @@ opts.command('addmod')
 		default: './config.json',
 		help: 'Specify a config file. defaults to ./config.json'
 	})
-	.callback(function(opts){
-		console.log(opts);
-	})
+	.callback(manager.addMod)
 	.help('Add a new mod to the library.');
 opts.parse()

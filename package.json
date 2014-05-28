@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "dependencies": {
-    "nomnom": "~1.6.2"
+    "nomnom": "~1.6.2",
+    "adm-zip": "^0.4.4"
   },
   "devDependencies": {},
   "scripts": {
