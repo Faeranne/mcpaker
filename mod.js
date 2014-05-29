@@ -14,7 +14,20 @@ var Mod = function(name, file){
 }
 
 Mod.prototype.getMod = function(){
-	return mod.document;
+	return this.document;
+}
+
+Mod.prototype.getName = function(){
+	return this.document.name;
+}
+
+Mod.prototype.setFile = function(file){
+	this.document.file = file;
+	return mod;
+}
+
+Mod.prototype.getFile = function(){
+	return this.document.file;
 }
 
 Mod.prototype.loadZip = function(){
@@ -77,6 +90,32 @@ Mod.prototype.setVersion = function(version){
 Mod.prototype.getVersion = function(){
 	var mod = this.document;
 	return mod.version;
+}
+
+Mod.prototype.setMCVersion = function(version){
+	var mod = this.document;
+	mod.MCVersion;
+	return mod;
+}
+
+Mod.prototype.loadMCVersion = function(){
+	var mod = this.document;
+	if(mod.info.modinfoversion){
+		if(mod.info.modinfoversion == 2){
+			mod.version = mod.info.modlist[0].mcversion
+		}else{
+			console.error('unknown modinfoversion.  cannot continue');
+		}
+	}else{
+		mod.MCVersion = mod.info[0].mcversion
+	}
+	return mod;
+}
+
+
+Mod.prototype.getMCVersion = function(){
+	var mod = this.document;
+	return mod.MCVersion;
 }
 
 Mod.prototype.loadDeps = function(){

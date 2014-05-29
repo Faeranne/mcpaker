@@ -43,6 +43,11 @@ opts.command('addMod')
 		required: true,
 		help: 'zip file of the mod'
 	})
+	.option('dir',{
+		abbr: 'd',
+		default: process.cwd(),
+		help: 'set the library directory.  Defaults to current working directory'
+	})
 	.option('config',{
 		abbr: 'c',
 		default: './config.json',

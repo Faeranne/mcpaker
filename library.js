@@ -1,5 +1,6 @@
 var fs = require('fs');
 var path = require('path');
+var crypto = require('crypto');
 
 var library = {}
 
@@ -31,9 +32,78 @@ library.initLibrary = function(opts){
 	fs.writeFileSync(path.join(opts.dir,"library.json"),JSON.stringify(json))
 }
 
+library.addMod = function(id,name,dir){
+	var mod = library.document.mods[id] = {};
+	mod.versions = {}
+	mod.id = id;
+	mod.name = name;
+	try{
+	fs.mkdir(path.join(dir,id));
+	}
+	catch (e){
+
+	}
+}
+
+library.modExists = function(id){
+	if(library.document.mods[id]){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+library.getMod = function(id){
+	return library.document.mods[id];
+}
+
+library.addVersion = function(mod,dir){
+	library.loadLibrary(dir);
+	if(!library.modExists(mod.getId())){
+		library.addMod(mod.getId(),mod.getName(),dir);
+	}
+	var doc = library.getMod(mod.getId());
+	var version = doc.versions[mod.getVersion()] = {};
+	version.file = path.join(mod.getId(),mod.getVersion()+path.extname(mod.getFile()));
+	version.mcVersion = mod.getMCVersion();
+	version.hash = getFileHash(mod.getFile());
+	copyFile(mod.getFile(),version.file,function(){library.saveLibrary(dir)});
+}
+
 library.saveLibrary = function(dir){
 	fs.writeFileSync(path.join(dir,"library.json"),JSON.stringify(library.document));
 	return true;
+}
+
+var getFileHash = function(file){
+	var md5 = crypto.createHash('md5')
+	var s = fs.readFileSync(file);
+	var digest = md5.update(s).digest('hex');
+	return digest;
+}
+
+function copyFile(source, target, cb) {
+  var cbCalled = false;
+
+  var rd = fs.createReadStream(source);
+  rd.on("error", function(err) {
+    done(err);
+  });
+  var wr = fs.createWriteStream(target);
+  wr.on("error", function(err) {
+    done(err);
+  });
+  wr.on("close", function(ex) {
+    done();
+  });
+  rd.pipe(wr);
+
+  function done(err) {
+    if (!cbCalled) {
+      cb(err);
+      cbCalled = true;
+    }
+  }
 }
 
 module.exports = library;

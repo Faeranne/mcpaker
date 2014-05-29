@@ -1,5 +1,4 @@
 var fs = require('fs');
-var crypto = require('crypto');
 
 var Mod = require('./mod.js');
 var library = require('./library');
@@ -22,7 +21,7 @@ var addMod = function(opts){
 	mod.loadVersion();
 	mod.loadDeps();
 	console.log(mod.getMod());
-	library.addVersion(mod);
+	library.addVersion(mod,opts.dir);
 }
 
 var addForgeless = function(opts){
@@ -42,13 +41,6 @@ var addForgeless = function(opts){
 	mod.setVersion(opts.modVersion);
 	mod.setDependencies(opts.dependencies);
 	console.log(mod);
-}
-
-var getFileHash = function(file){
-	var md5 = crypto.createHash('md5')
-	var s = fs.readFileSync(file);
-	var digest = md5.update(s).digest('hex');
-	return digest;
 }
 
 
