@@ -7,21 +7,39 @@ function getExtension(filename) {
 }
 
 var Mod = function(name, file){
-	this.name = name
-	this.file = file || ""
+	this.document = {}
+	var mod = this.document
+	mod.name = name
+	mod.file = file || ""
 }
 
-Mod.prototype.getZip = function(file){
-	var mod = this;
-	var file = file || mod.file
+Mod.prototype.getMod = function(){
+	return mod.document;
+}
+
+Mod.prototype.loadZip = function(){
+	var mod = this.document;
+	var file = mod.file
 	mod.zip = admZip(file); 
 	return mod;
 }
 
-Mod.prototype.getInfo = function(){
-	var mod = this;
+Mod.prototype.setZip = function(file){
+	var mod = this.document;
+	mod.file = file
+	mod.zip = admZip(file); 
+	return mod;
+}
+
+Mod.prototype.getZip = function(){
+	var mod = this.document;
+	return mod.zip;
+}
+
+Mod.prototype.loadInfo = function(){
+	var mod = this.document;
 	if(!mod.zip.getEntry("mcmod.info")){
-		console.log("Mod "+mod.file+" is something other than a forge mod.  Double check it\'s properly installed, otherwise, add it via the \'manager addmod\' command");
+		console.log("Mod "+mod.file+" is something other than a forge mod.");
 		mod.notForge = true;
 		return mod
 	}
@@ -31,8 +49,13 @@ Mod.prototype.getInfo = function(){
 	return mod;
 }
 
-Mod.prototype.getVersion = function(){
-	var mod = this;
+Mod.prototype.getInfo = function(){
+	var mod = this.document;
+	return mod.info;
+}
+
+Mod.prototype.loadVersion = function(){
+	var mod = this.document;
 	if(mod.info.modinfoversion){
 		if(mod.info.modinfoversion == 2){
 			mod.version = mod.info.modlist[0].version
@@ -45,8 +68,19 @@ Mod.prototype.getVersion = function(){
 	return mod;
 }
 
-Mod.prototype.getDependencies = function(){
-	var mod = this
+Mod.prototype.setVersion = function(version){
+	var mod = this.document;
+	mod.version = version
+	return mod;
+}
+
+Mod.prototype.getVersion = function(){
+	var mod = this.document;
+	return mod.version;
+}
+
+Mod.prototype.loadDeps = function(){
+	var mod = this.document;
 	if(mod.info.modinfoversion){
 		if(mod.info.modinfoversion == 2){
 			mod.dependencies = mod.info.modlist[0].requiredMods
@@ -59,7 +93,25 @@ Mod.prototype.getDependencies = function(){
 	return mod;
 }
 
-Mod.prototype.getId = function(mod){
+Mod.prototype.setDeps = function(deps){
+	var mod = this.document;
+	if(deps){
+		deps.forEach(function(dep){
+			if(mod.dependencies.indexOf(dep)<0){
+				mod.dependencies.push(dep);
+			}
+		})
+	}
+	return mod;
+}
+
+Mod.prototype.getDeps = function(){
+	var mod = this.document;
+	return mod.deps;
+}
+
+Mod.prototype.loadId = function(){
+	var mod = this.document;
 	if(mod.info.modinfoversion){
 		if(mod.info.modinfoversion == 2){
 			mod.id = mod.info.modlist[0].modid
@@ -72,8 +124,24 @@ Mod.prototype.getId = function(mod){
 	return mod;
 }
 
+Mod.prototype.setId = function(id){
+	var mod = this.document;
+	mod.id = id;
+	return mod;
+}
+
+Mod.prototype.getId = function(){
+	var mod = this.document;
+	return mod.id;
+}
+
+Mod.prototype.isForge = function(){
+	var mod = this.document;
+	return !mod.notForge;
+}
+
 Mod.prototype.checkDeps = function(modList){
-	var mod = this
+	var mod = this.document;
 	if(mod.notForge){
 		console.log('Mod is not a forge mod.  Cannot check dependencies');
 		return false;
