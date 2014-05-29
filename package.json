@@ -1,16 +1,17 @@
 {
-  "name": "modpaker",
-  "version": "0.0.0",
-  "description": "",
+  "name": "mcpaker",
+  "version": "0.1.0",
+  "description": "CLI software to manage private modpack.  Uses the CraftBoot minecraft launcher.",
   "main": "app.js",
+  "bin":{
+	"paker": "./app.js"
+  },
   "dependencies": {
     "nomnom": "~1.6.2",
     "adm-zip": "^0.4.4"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Blixa Morgan <blixa@projectmakeit.com> (http://projectmakeit.com)",
+  "license": "GPL3.0+"
 }

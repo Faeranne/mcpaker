@@ -2,12 +2,13 @@ var fs = require('fs');
 var path = require('path');
 var crypto = require('crypto');
 
+var Pak = require('./pak');
+
 var library = {}
 
 library.loadLibrary = function(dir){
 	if(!fs.existsSync(path.join(dir,"library.json"))){
-		console.log("Library not initalized yet.");
-		return false;
+		throw("ERROR: Library not initalized yet.");
 	}
 	var json = fs.readFileSync(path.join(dir,"library.json"));
 	var json = JSON.parse(json);
@@ -18,8 +19,7 @@ library.loadLibrary = function(dir){
 library.initLibrary = function(opts){
 	if(fs.existsSync(opts.dir)){
 		if(fs.readdirSync(opts.dir).length>0){
-			console.log("Directory is not empty. Cant continue");
-			return 1;
+			throw("ERROR: Directory is not empty. Cant continue");
 		}
 	}else{
 		fs.mkdirSync(opts.dir);
@@ -28,7 +28,7 @@ library.initLibrary = function(opts){
 	json.name = opts.name;
 	json.version = 0;
 	json.mods = {};
-	json.packs = {};
+	json.paks = {};
 	fs.writeFileSync(path.join(opts.dir,"library.json"),JSON.stringify(json))
 }
 
@@ -69,6 +69,21 @@ library.addVersion = function(mod,dir){
 	version.hash = getFileHash(mod.getFile());
 	copyFile(mod.getFile(),version.file,function(){library.saveLibrary(dir)});
 }
+
+library.savePak = function(pak,dir){
+	library.loadLibrary(dir);
+	library.document.paks[pak.getId()] = pak.getPak();
+	library.saveLibrary(dir);
+}
+
+library.loadPak = function(id,dir){
+	library.loadLibrary(dir);
+	var pak = new Pak();
+	pak.setPak(library.document.paks[id]);
+	return pak;
+}
+
+	
 
 library.saveLibrary = function(dir){
 	fs.writeFileSync(path.join(dir,"library.json"),JSON.stringify(library.document));

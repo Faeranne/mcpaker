@@ -1,4 +1,6 @@
+#!/usr/bin/env node
 var fs = require('fs');
+var path = require('path');
 var opts = require('nomnom');
 var manager = require('./manager');
 var library = require('./library');
@@ -17,20 +19,79 @@ opts.command('init')
 	.callback(library.initLibrary)
 	.help('Start a new library in an empty directory.');
 
-opts.command('newpak')
-	.option('modpak',{
-		abbr: 'm',
-		help: 'Specify the modpak.json file to generate the pack from'
+opts.command('newPak')
+	.option('name',{
+		position: 1,
+		required: true,
+		help: 'Name of the new modpack.  This is what users will see.'
 	})
-	.option('config',{
-		abbr: 'c',
-		default: './config.json',
-		help: 'Specify a config file. defaults to ./config.json'
+	.option('id',{
+		position: 2,
+		required: true,
+		help: 'Interal id of the modpack.  This should have only lowercase letters, numbers, dashes, and underscores.'
 	})
-	.callback(function(opts){
-		console.log(opts);
+	.option('dir',{
+		abbr: 'd',
+		default: process.cwd(),
+		help: 'set the library directory.  Defaults to current working directory'
 	})
+	.callback(manager.createPak)
 	.help('Generate a new modpack.');
+
+opts.command('editPak')
+	.option('id',{
+		position: 1,
+		required: true,
+		help: 'Interal id of the modpack.  This should have only lowercase letters, numbers, dashes, and underscores.'
+	})
+	.option('command',{
+		position: 2,
+		required: true,
+		choices:[
+			'addMod',
+			'rmMod',
+			'addConfig',
+			'rmConfig',
+			'setForge'
+		],
+		help: 'Command to execute on pak.' 
+	})
+	.option('dir',{
+		abbr: 'd',
+		default: process.cwd(),
+		help: 'set the library directory.  Defaults to current working directory'
+	})
+	.callback(manager.editPak)
+	.help('Generate a new modpack.');
+
+opts.command('makeRelease')
+	.option('id',{
+		position: 1,
+		required: true,
+		help: 'Interal id of the modpack.  This should have only lowercase letters, numbers, dashes, and underscores.'
+	})
+	.option('dest',{
+		default: path.join(process.cwd(),'dest'),
+		help: "Destination for the release"
+	})
+	.callback(manager.release)
+	.help("Release the modpak.  This will auto increment the version number");
+
+opts.command('makeDev')
+	.option('id',{
+		position: 1,
+		required: true,
+		help: 'Interal id of the modpack.  This should have only lowercase letters, numbers, dashes, and underscores.'
+	})
+	.option('dest',{
+		default: path.join(process.cwd(),'dest'),
+		help: "Destination for the release"
+	})
+	.callback(manager.dev)
+	.help("Release Test version of the package.  Useful for testing a modpak will download correctly before releasing to your users.");
+
+	
+
 
 opts.command('addMod')
 	.option('name',{
@@ -58,6 +119,14 @@ opts.command('addMod')
 		flag: true,
 		help: 'Force adding mod as a Forge mod, even if it\'s detected as another mod type'
 	})
+	.option('server',{
+		flag: true,
+		help: 'Specifies the mod is server side only.  Keeps it from being added to a release package'
+	})
+	.option('client',{
+		flag: true,
+		help: 'Specifies the mod is client side only.  Keeps it from being added to a server push'
+	})
 	.callback(manager.addMod)
 	.help('Add a new mod to the library.');
 
@@ -82,7 +151,7 @@ opts.command('addForgeless')
 		required: true,
 		help: 'Mod version number.  May be internal mod version or MC version.'
 	})
-	.option('MCVersion',{
+	.option('mcVersion',{
 		position: 5,
 		required: true,
 		help: 'Minecraft Version number.  Determines version compatability.'

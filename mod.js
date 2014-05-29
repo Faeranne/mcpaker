@@ -56,7 +56,6 @@ Mod.prototype.loadInfo = function(){
 		mod.notForge = true;
 		return mod
 	}
-	console.log(mod.zip.readAsText("mcmod.info"));
 	// the .replace is to fix the fact that many mods seem to put returns in the description line, breaking JSON.parse
 	mod.info = JSON.parse(mod.zip.readAsText("mcmod.info").replace(/[\n\r]/g, ' '))	
 	return mod;
@@ -73,7 +72,7 @@ Mod.prototype.loadVersion = function(){
 		if(mod.info.modinfoversion == 2){
 			mod.version = mod.info.modlist[0].version
 		}else{
-			console.error('unknown modinfoversion.  cannot continue');
+			throw('unknown modinfoversion.  cannot continue');
 		}
 	}else{
 		mod.version = mod.info[0].version
@@ -104,7 +103,7 @@ Mod.prototype.loadMCVersion = function(){
 		if(mod.info.modinfoversion == 2){
 			mod.version = mod.info.modlist[0].mcversion
 		}else{
-			console.error('unknown modinfoversion.  cannot continue');
+			throw('unknown modinfoversion.  cannot continue');
 		}
 	}else{
 		mod.MCVersion = mod.info[0].mcversion
@@ -124,7 +123,7 @@ Mod.prototype.loadDeps = function(){
 		if(mod.info.modinfoversion == 2){
 			mod.dependencies = mod.info.modlist[0].requiredMods
 		}else{
-			console.error('unknown modinfoversion.  cannot continue');
+			throw('unknown modinfoversion.  cannot continue');
 		}
 	}else{
 		mod.dependencies = mod.info[0].requiredMods
@@ -155,7 +154,7 @@ Mod.prototype.loadId = function(){
 		if(mod.info.modinfoversion == 2){
 			mod.id = mod.info.modlist[0].modid
 		}else{
-			console.error('Unknown modinfo version. cannot continue');
+			throw('Unknown modinfo version. cannot continue');
 		}
 	}else{
 		mod.id = mod.info[0].modid
