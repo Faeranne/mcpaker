@@ -1,4 +1,4 @@
-#mcpaker
+![logo](http://i1279.photobucket.com/albums/y523/textcraft/May%202014%20-%204/5613fe85b14bfba8852c66a86088e4f28b21c76b2f26e018ee7d466a4e995762f3d3a91a2bf15498da39a3ee5e6b4b0d3255bfef95601890afd80709592f4dc7ad197f730ed6_zpse5ff3970.png)
 
 Paker is a Minecraft modpack manager for the Command Line.
 Paker will maintain your library of mods, and help link them to various mod packs.  This makes releasing your custom mod packs easy.
