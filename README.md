@@ -1,16 +1,13 @@
 #mcpaker
-=======
 
 Paker is a Minecraft modpack manager for the Command Line.
 Paker will maintain your library of mods, and help link them to various mod packs.  This makes releasing your custom mod packs easy.
 
-Paker releases are in SKlauncher format.  I recommend the CraftBoot launcher (link coming soon) since it is prebuilt.
+Paker releases are in SKlauncher format.  I recommend the [CraftBoot launcher](https://github.com/oxguy3/craftboot) since it is prebuilt.
 
 NOTICE: Paker is not ready for public use. This notice will be removed as soon as it is functional.
 
 ## Installation
-========
-
 Paker can be installed via npm: 
 ```
 npm install -g paker
