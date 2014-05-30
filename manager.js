@@ -21,6 +21,24 @@ var addMod = function(opts){
 	library.addVersion(mod,opts.dir);
 }
 
+var editMod = function(opts){
+	var mod = new Mod();
+	mod.setMod(library.getVersion(opts.id,opts.version,opts.dir));
+	if(opts.name){
+		library.editModName(opts.id,opts.name,opts.dir)
+	}
+	if(opts.mcVersion){
+		mod.setMCVersion(opts.mcVersion);
+	}
+	if(opts.zip){
+		mod.setZip(opts.zip);
+	}
+	if(opts.deps){
+		mod.setDeps(opts.deps);
+	}
+	library.editVersion(mod,opts.dir);
+}
+
 var addForgeless = function(opts){
 	var mod = new Mod(opts.name,opts.file);
 	mod.loadZip();
@@ -35,7 +53,7 @@ var addForgeless = function(opts){
 	mod.setId(opts.id);
 	mod.setVersion(opts.modVersion);
 	mod.setMCVersion(opts.mcVersion);
-	mod.setDependencies(opts.dependencies);
+	mod.setDeps(opts.deps);
 	library.addVersion(mod,opts.dir);
 }
 
@@ -44,7 +62,7 @@ var createPak = function(opts){
 	library.savePak(pak,opts.dir);
 }
 
-var editPak = function(opts){
+var addPakMod = function(opts){
 	var pak = library.loadPak(opts.id,opts.dir);
 	var mod = {}
 	mod.id = opts[3];
@@ -53,8 +71,11 @@ var editPak = function(opts){
 	library.savePak(pak,opts.dir);
 }
 
-
 module.exports.addMod = addMod;
 module.exports.addForgeless = addForgeless;
 module.exports.createPak = createPak;
-module.exports.editPak = editPak;
+module.exports.addPakMod = addPakMod;
+module.exports.editMod = editMod;
+module.exports.library = library
+module.exports.Mod = Mod;
+module.exports.Pak = Pak;

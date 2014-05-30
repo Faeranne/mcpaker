@@ -19,7 +19,7 @@ opts.command('init')
 	.callback(library.initLibrary)
 	.help('Start a new library in an empty directory.');
 
-opts.command('newPak')
+opts.command('newpak')
 	.option('name',{
 		position: 1,
 		required: true,
@@ -38,7 +38,7 @@ opts.command('newPak')
 	.callback(manager.createPak)
 	.help('Generate a new modpack.');
 
-opts.command('editPak')
+opts.command('addpakmod')
 	.option('id',{
 		position: 1,
 		required: true,
@@ -61,10 +61,10 @@ opts.command('editPak')
 		default: process.cwd(),
 		help: 'set the library directory.  Defaults to current working directory'
 	})
-	.callback(manager.editPak)
+	.callback(manager.addPakMod)
 	.help('Generate a new modpack.');
 
-opts.command('makeRelease')
+opts.command('release')
 	.option('id',{
 		position: 1,
 		required: true,
@@ -73,11 +73,16 @@ opts.command('makeRelease')
 	.option('dest',{
 		default: path.join(process.cwd(),'dest'),
 		help: "Destination for the release"
+	})
+	.option('dir',{
+		abbr: 'd',
+		default: process.cwd(),
+		help: 'set the library directory.  Defaults to current working directory'
 	})
 	.callback(manager.release)
 	.help("Release the modpak.  This will auto increment the version number");
 
-opts.command('makeDev')
+opts.command('dev')
 	.option('id',{
 		position: 1,
 		required: true,
@@ -86,6 +91,11 @@ opts.command('makeDev')
 	.option('dest',{
 		default: path.join(process.cwd(),'dest'),
 		help: "Destination for the release"
+	})
+	.option('dir',{
+		abbr: 'd',
+		default: process.cwd(),
+		help: 'set the library directory.  Defaults to current working directory'
 	})
 	.callback(manager.dev)
 	.help("Release Test version of the package.  Useful for testing a modpak will download correctly before releasing to your users.");
@@ -93,7 +103,7 @@ opts.command('makeDev')
 	
 
 
-opts.command('addMod')
+opts.command('addmod')
 	.option('name',{
 		position: 1,
 		required: true,
@@ -130,7 +140,7 @@ opts.command('addMod')
 	.callback(manager.addMod)
 	.help('Add a new mod to the library.');
 
-opts.command('addForgeless')
+opts.command('addforgeless')
 	.option('name',{
 		position: 1,
 		required: true,
@@ -158,7 +168,6 @@ opts.command('addForgeless')
 	})
 	.option('deps',{
 		list: true,
-		abbr: "d",
 		help: 'Mod dependencies.  Can specify multiple dependencies by specifing -d several times.'
 	})
 	.option('config',{
@@ -171,7 +180,44 @@ opts.command('addForgeless')
 		flag: true,
 		help: 'Force adding mod as a non-forge mod, even if it\'s detected as forge compatable.'
 	})
+	.option('dir',{
+		abbr: 'd',
+		default: process.cwd(),
+		help: 'set the library directory.  Defaults to current working directory'
+	})
 	.callback(manager.addForgeless)
 	.help('Add a new mod to the library.');
+
+opts.command('editmod')
+	.option('id',{
+		position: 1,
+		required: true,
+		help: 'ID of mod'
+	})
+	.option('version',{
+		position: 2,
+		required: true,
+		help: 'Mod version number.'
+	})
+	.option('zip',{
+		help: 'zip file of the mod'
+	})
+	.option('name',{
+		help: 'name of the mod'
+	})
+	.option('mcVersion',{
+		help: 'Add another MC version to the mod.  This allows the mod to be used with multiple versions of MC.'
+	})
+	.option('deps',{
+		list: true,
+		help: 'Mod dependencies.  Can specify multiple dependencies by specifing -d several times.'
+	})
+	.option('dir',{
+		abbr: 'd',
+		default: process.cwd(),
+		help: 'set the library directory.  Defaults to current working directory'
+	})
+	.callback(manager.editMod)
+	.help('Edit a mod in the library.');
 
 opts.parse()

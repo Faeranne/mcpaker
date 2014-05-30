@@ -1,8 +1,8 @@
 {
   "name": "mcpaker",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "CLI software to manage private modpack.  Uses the CraftBoot minecraft launcher.",
-  "main": "app.js",
+  "main": "manager.js",
   "bin":{
 	"paker": "./app.js"
   },

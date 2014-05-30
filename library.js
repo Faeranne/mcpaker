@@ -7,12 +7,14 @@ var Pak = require('./pak');
 var library = {}
 
 library.loadLibrary = function(dir){
-	if(!fs.existsSync(path.join(dir,"library.json"))){
-		throw("ERROR: Library not initalized yet.");
+	if(!library.document){
+		if(!fs.existsSync(path.join(dir,"library.json"))){
+			throw("ERROR: Library not initalized yet.");
+		}
+		var json = fs.readFileSync(path.join(dir,"library.json"));
+		var json = JSON.parse(json);
+		library.document = json;
 	}
-	var json = fs.readFileSync(path.join(dir,"library.json"));
-	var json = JSON.parse(json);
-	library.document = json;
 	return true;
 }
 
@@ -45,6 +47,11 @@ library.addMod = function(id,name,dir){
 	}
 }
 
+library.editModName = function(id,name,dir){
+	var mod = library.document.mods[id];
+	mod.name = name;
+}
+
 library.modExists = function(id){
 	if(library.document.mods[id]){
 		return true;
@@ -53,8 +60,17 @@ library.modExists = function(id){
 	}
 }
 
-library.getMod = function(id){
+library.getMod = function(id,dir){
+	library.loadLibrary(dir)
 	return library.document.mods[id];
+}
+
+library.getVersion = function(id,version,dir){
+	library.loadLibrary(dir)
+	var mod = library.document.mods[id].versions[version] 
+	mod.id = id;
+	mod.version = version;
+	return mod;
 }
 
 library.addVersion = function(mod,dir){
@@ -67,6 +83,19 @@ library.addVersion = function(mod,dir){
 	version.file = path.join(mod.getId(),mod.getVersion()+path.extname(mod.getFile()));
 	version.mcVersion = mod.getMCVersion();
 	version.hash = getFileHash(mod.getFile());
+	copyFile(mod.getFile(),version.file,function(){library.saveLibrary(dir)});
+}
+
+library.editVersion = function(mod,dir){
+	library.loadLibrary(dir);
+	if(!library.modExists(mod.getId())){
+		library.addMod(mod.getId(),mod.getName(),dir);
+	}
+	var doc = library.getMod(mod.getId());
+	var version = doc.versions[mod.getVersion()] = {};
+	version.file = path.join(mod.getId(),mod.getVersion()+path.extname(mod.getFile()));
+	version.mcVersion = mod.getMCVersion();
+	version.hash = getFileHash(path.join(dir,mod.getFile()));
 	copyFile(mod.getFile(),version.file,function(){library.saveLibrary(dir)});
 }
 

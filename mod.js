@@ -13,6 +13,11 @@ var Mod = function(name, file){
 	mod.file = file || ""
 }
 
+Mod.prototype.setMod = function(mod){
+	this.document = mod;
+	return this
+}
+
 Mod.prototype.getMod = function(){
 	return this.document;
 }
