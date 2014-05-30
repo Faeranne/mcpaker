@@ -150,4 +150,9 @@ function copyFile(source, target, cb) {
   }
 }
 
+library.getMods = function(dir){
+	library.loadLibrary(dir);
+	return library.document.mods;
+}
+
 module.exports = library;

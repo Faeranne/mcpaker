@@ -57,6 +57,18 @@ var addForgeless = function(opts){
 	library.addVersion(mod,opts.dir);
 }
 
+var listMods = function(opts){
+	var mods = library.getMods(opts.dir)
+	var modList = []
+	for(mod in mods){
+		var returnText = mod +": "
+		for(version in mods[mod].versions){
+			returnText = returnText + version +', '
+		}
+		console.log(returnText)
+	}
+}
+
 var createPak = function(opts){
 	var pak = new Pak(opts.name,opts.id);
 	library.savePak(pak,opts.dir);
@@ -72,6 +84,7 @@ var addPakMod = function(opts){
 }
 
 module.exports.addMod = addMod;
+module.exports.listMods = listMods;
 module.exports.addForgeless = addForgeless;
 module.exports.createPak = createPak;
 module.exports.addPakMod = addPakMod;

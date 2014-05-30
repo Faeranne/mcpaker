@@ -220,4 +220,13 @@ opts.command('editmod')
 	.callback(manager.editMod)
 	.help('Edit a mod in the library.');
 
+opts.command('listmods')
+	.option('dir',{
+		abbr: 'd',
+		default: process.cwd(),
+		help: 'set the library directory.  Defaults to current working directory'
+	})
+	.callback(manager.listMods)
+	.help('Edit a mod in the library.');
+
 opts.parse()
