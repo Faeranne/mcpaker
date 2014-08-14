@@ -77,10 +77,15 @@ var createPak = function(opts){
 var addPakMod = function(opts){
 	var pak = library.loadPak(opts.id,opts.dir);
 	var mod = {}
-	mod.id = opts[3];
-	mod.version = opts[4];
+	mod.id = opts.mod;
+	mod.version = opts.version;
 	pak.addMod(mod);
 	library.savePak(pak,opts.dir);
+}
+
+var release = function(opts){
+	var pak = library.loadPak(opts.id,opts.dir);
+	console.log(pak);
 }
 
 module.exports.addMod = addMod;
@@ -89,6 +94,7 @@ module.exports.addForgeless = addForgeless;
 module.exports.createPak = createPak;
 module.exports.addPakMod = addPakMod;
 module.exports.editMod = editMod;
+module.exports.release = release;
 module.exports.library = library
 module.exports.Mod = Mod;
 module.exports.Pak = Pak;

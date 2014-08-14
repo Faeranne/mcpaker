@@ -44,16 +44,14 @@ opts.command('addpakmod')
 		required: true,
 		help: 'Interal id of the modpack.  This should have only lowercase letters, numbers, dashes, and underscores.'
 	})
-	.option('command',{
+	.option('mod',{
 		position: 2,
 		required: true,
-		choices:[
-			'addMod',
-			'rmMod',
-			'addConfig',
-			'rmConfig',
-			'setForge'
-		],
+		help: 'Command to execute on pak.' 
+	})
+	.option('version',{
+		position: 3,
+		required: true,
 		help: 'Command to execute on pak.' 
 	})
 	.option('dir',{
@@ -69,10 +67,6 @@ opts.command('release')
 		position: 1,
 		required: true,
 		help: 'Interal id of the modpack.  This should have only lowercase letters, numbers, dashes, and underscores.'
-	})
-	.option('dest',{
-		default: path.join(process.cwd(),'dest'),
-		help: "Destination for the release"
 	})
 	.option('dir',{
 		abbr: 'd',
